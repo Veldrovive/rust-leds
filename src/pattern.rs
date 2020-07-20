@@ -6,6 +6,7 @@ use std::collections::HashMap;
 
 extern crate rand;
 use rand::{Rng, SeedableRng, rngs::StdRng};
+use std::time::SystemTime;
 
 pub struct MovingRainbow {
     pub tick_rate: u128,
@@ -82,7 +83,6 @@ impl Pattern for SolidTimeVaryingRainbow {
     fn tick_cycle(&self) -> Option<u128> { self.tick_cycle }
     fn tick(&mut self, tick: u128, leds: &mut Vec<[u8; 4]>) -> bool {
         if !self.logged {
-            println!("Rainbow starting at tick: {}", tick);
             self.logged = true;
         }
         self.color.h = tick as f64;
@@ -129,7 +129,7 @@ impl Pattern for GradientPattern {
             }
             return true
         }
-        false
+        true
     }
 }
 
@@ -166,7 +166,7 @@ impl Pattern for SolidPattern {
             }
             return true
         }
-        false
+        true
     }
 }
 
@@ -187,7 +187,7 @@ impl FadePattern {
             tick_cycle: None,
             color,
             num_dots,
-            rand: StdRng::seed_from_u64(0),
+            rand: StdRng::from_entropy(),
             lights: Vec::new()
         }
     }
@@ -267,7 +267,6 @@ pub trait Pattern: Send {
     fn tick_rate(&self) -> u128;
     fn tick_cycle(&self) -> Option<u128>;
     fn start_tick(&mut self, raw_tick: u128, leds: &mut Vec<[u8; 4]>) -> bool {
-        // println!("Ticking pattern at {}", raw_tick % self.tick_cycle());
         match self.tick_cycle() {
             Some(cycle) => self.tick(raw_tick % cycle, leds),
             None => self.tick(raw_tick, leds)
@@ -341,12 +340,16 @@ impl PatternManager {
 
         let pattern_manager = PatternManager {
             creation_time: time::Instant::now(),
-            sleep_time: time::Duration::from_micros(1_000_000),
+            sleep_time: time::Duration::from_micros(1_000),
             patterns: HashMap::new(),
             controller: controller,
             num_leds: led_count,
         };
         pattern_manager
+    }
+
+    pub fn set_brightness(&mut self, brightness: u8) {
+        self.controller.set_brightness(0, brightness);
     }
 
     pub fn add_pattern(&mut self, name: String, pattern: Box<dyn Pattern>) {
@@ -358,16 +361,30 @@ impl PatternManager {
         self.patterns.insert(name, store);
     }
 
+    pub fn remove_pattern(&mut self, name: String) -> bool {
+        if self.patterns.contains_key(&name) {
+            self.patterns.remove(&name);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    pub fn clear(&mut self) {
+        self.patterns.clear();
+        self.tick();
+    }
+
+    pub fn get_patterns(&mut self) -> Vec<String> {
+        self.patterns.keys().map(|key| key.clone()).collect()
+    }
+
     fn get_curr_time(&self) -> u128 {
         self.creation_time.elapsed().as_millis()
     }
 
     pub fn increment_ticks(&mut self) {
         let elapsed = self.get_curr_time();
-        // if !self.logged {
-        //     println!("Started new runner at elapsed = {}", elapsed);
-        //     self.logged = true;
-        // }
         let mut got_update = false;
         
         for (_name, pattern_holder) in self.patterns.iter_mut(){
@@ -403,7 +420,6 @@ impl PatternManager {
                     led[l as usize] += pattern_manager.leds[i as usize][l as usize] as u32; // / len;
                 }
             }
-            println!("PreLed: {:?}", led);
 
             if false {
                 // let max = leds[i as usize].iter().max().expect("Could not get max for brightness");
@@ -430,7 +446,6 @@ impl PatternManager {
                     }
                 }
             }
-            println!("PostLed: {:?}", led);
             for l in 0..3 {
                 leds[i as usize][l] = led[l] as u8;
             }

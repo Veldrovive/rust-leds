@@ -306,6 +306,7 @@ dependencies = [
  "rand",
  "rs_ws281x",
  "serde",
+ "serde_json",
  "ws_connector",
 ]
 
@@ -527,7 +528,7 @@ dependencies = [
 
 [[package]]
 name = "rs_ws281x"
-version = "0.2.3"
+version = "0.3.1"
 dependencies = [
  "bindgen",
  "cc",

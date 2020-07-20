@@ -1,0 +1,25 @@
+{
+    "pattern_name": {
+        "default_arg_1": "default_value_1"
+    },
+    "fade": {
+        "num_dots": 40,
+        "color": [100, 100, 100, 0],
+        "tick_rate": 30
+    },
+    "solid": {
+        "color": [100, 100, 100, 0]
+    },
+    "moving_rainbow": {
+        "tick_rate": 30, "saturation": 0.7, "lightness": 0.3, "brightness": 0.3
+    },
+    "solid_rainbow": {
+        "tick_rate": 30, "saturation": 0.7, "lightness": 0.3, "brightness": 0.3
+    },
+    "gradient": {
+        "start_color": [100, 100, 100, 0], "end_color": [0, 0, 0, 0]
+    },
+    "fade_crawl": {
+        "tick_rate": 40, "tail_len": 40, "color": [100, 100, 100, 0], "start_pos": 0
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "crawl0": {
+        "pattern": "fade_crawl",
+        "args": { "color": [100, 100, 100, 0], "start_pos": 0 }
+    },
+    "crawl1": {
+        "pattern": "fade_crawl",
+        "args": { "color": [100, 100, 100, 0], "start_pos": 60 }
+    },
+    "crawl2": {
+        "pattern": "fade_crawl",
+        "args": { "color": [100, 100, 100, 0], "start_pos": 120 }
+    },
+    "crawl3": {
+        "pattern": "fade_crawl",
+        "args": { "color": [100, 100, 100, 0], "start_pos": 180 }
+    },
+    "background": {
+        "pattern": "solid_rainbow",
+        "args": { "brightness": 0.1, "saturation": 0.7 }
+    }
+}

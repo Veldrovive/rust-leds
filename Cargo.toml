@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 ws_connector = { path = "RustWebsocketClient" }
 serde = { version = "*", features = ["derive"] }
+serde_json = "*"
 rand = "0.7.3"
 rs_ws281x = { path = "rpi-ws281x-rust" }
 hsl = "0.1.1"

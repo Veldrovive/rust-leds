@@ -1,0 +1,66 @@
+{
+    "sparkle_deep_purple": {
+        "pattern": "fade",
+        "args": {
+            "color": [255, 0, 100, 0], 
+            "num_leds": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_purple": {
+        "pattern": "fade",
+        "args": {
+            "color": [255, 0, 255, 0], 
+            "num_leds": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_red": {
+        "pattern": "fade",
+        "args": {
+            "color": [0, 0, 255, 0], 
+            "num_leds": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_green": {
+        "pattern": "fade",
+        "args": {
+            "color": [0, 255, 0, 0], 
+            "num_leds": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_blue": {
+        "pattern": "fade",
+        "args": {
+            "color": [255, 0, 0, 0], 
+            "num_leds": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_rand1": {
+        "pattern": "fade",
+        "args": {
+            "color": [24, 105, 210, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_rand2": {
+        "pattern": "fade",
+        "args": {
+            "color": [170, 50, 18, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_rand3": {
+        "pattern": "fade",
+        "args": {
+            "color": [3, 50, 105, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    }
+}

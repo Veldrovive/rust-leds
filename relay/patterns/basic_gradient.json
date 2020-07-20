@@ -1,0 +1,6 @@
+{
+    "gradient": {
+        "pattern": "solid_gradient",
+        "args": { "start_color": [255, 0, 0, 0], "end_color": [0, 0, 255, 0] }
+    }
+}

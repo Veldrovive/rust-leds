@@ -1,0 +1,26 @@
+{
+    "sparkle_green": {
+        "pattern": "fade",
+        "args": {
+            "color": [0, 255, 0, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_red": {
+        "pattern": "fade",
+        "args": {
+            "color": [0, 0, 255, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    },
+    "sparkle_gold": {
+        "pattern": "fade",
+        "args": {
+            "color": [0, 215, 255, 0], 
+            "num_dots": 180,
+            "tick_rate": 20
+        }
+    }
+}
