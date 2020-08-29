@@ -7,9 +7,10 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ws_connector = { path = "RustWebsocketClient" }
+# cpal = { git = "https://github.com/Veldrovive/cpal.git" }
+ws_connector = { path = "RustWebsocketClient" } # I just haven't published this package yet
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 rand = "0.7.3"
-rs_ws281x = { path = "rpi-ws281x-rust" }
+rs_ws281x = { git = "https://github.com/Veldrovive/rpi-ws281x-rust.git" }
 hsl = "0.1.1"

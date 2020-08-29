@@ -292,16 +292,25 @@ impl Runner {
 
     pub fn start(&mut self, threaded_manager: Arc<Mutex<PatternManager>>) {
         thread::spawn(move || {
+            // let mut lock_count = 0;
+            let mut fail_count = 0;
             let manager = threaded_manager.lock().unwrap();
             let mut sleep_time = manager.sleep_time;
             drop(manager);
             loop {
-                let mut manager = threaded_manager.lock().unwrap();
-                if manager.sleep_time != sleep_time {
-                    sleep_time = manager.sleep_time;
+                let mut lock = threaded_manager.try_lock();
+                if let Ok(ref mut mutex) = lock {
+                    // println!("Got manager: {}", lock_count);
+                    // lock_count += 1;
+                    if (*mutex).sleep_time != sleep_time {
+                        sleep_time = (*mutex).sleep_time;
+                    }
+                    (*mutex).increment_ticks();
+                    drop(mutex);
+                } else {
+                    // println!("Manager was locked: {}", fail_count);
+                    fail_count += 1;
                 }
-                (*manager).increment_ticks();
-                drop(manager);
                 thread::sleep(sleep_time);
             }
         });
@@ -311,7 +320,8 @@ impl Runner {
 struct PatternStore {
     pattern: Box<dyn Pattern>,
     leds: Vec<[u8; 4]>,
-    curr_tick: u128
+    curr_tick: u128,
+    start_time: time::Instant
 }
 
 pub struct PatternManager {
@@ -356,7 +366,8 @@ impl PatternManager {
         let store = PatternStore {
             pattern: pattern,
             leds: vec![[0, 0, 0, 0]; self.num_leds as usize],
-            curr_tick: 0
+            curr_tick: 0,
+            start_time: time::Instant::now(),
         };
         self.patterns.insert(name, store);
     }
@@ -379,21 +390,20 @@ impl PatternManager {
         self.patterns.keys().map(|key| key.clone()).collect()
     }
 
-    fn get_curr_time(&self) -> u128 {
-        self.creation_time.elapsed().as_millis()
-    }
-
     pub fn increment_ticks(&mut self) {
-        let elapsed = self.get_curr_time();
         let mut got_update = false;
         
         for (_name, pattern_holder) in self.patterns.iter_mut(){
+            let elapsed = pattern_holder.start_time.elapsed().as_millis();
             let old_tick = pattern_holder.curr_tick;
             let curr_tick = pattern_holder.pattern.elapsed_to_raw_tick(elapsed);
 
             if curr_tick > old_tick {
                 let leds = &mut pattern_holder.leds;
                 // Only run if there is going to be an update
+                if curr_tick - old_tick > 1 {
+                    println!("Catching up on {} by {} ticks", _name, curr_tick-old_tick);
+                }
                 for j in old_tick..curr_tick {
                     // This runs the number of times that the pattern should tick
                     if pattern_holder.pattern.start_tick(j + 1, leds) {

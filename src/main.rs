@@ -69,6 +69,7 @@ fn main() {
     struct AddPatterns { patterns: Vec<AddPattern> }
     let add_patterns_manager = Arc::clone(&arc_manager);
     client.on("add_patterns".to_string(), move |val: AddPatterns| {
+        println!("Manager Locked to Add Patterns");
         let mut p_manager = add_patterns_manager.lock().unwrap();
         for n_pattern in val.patterns.iter() {
             if n_pattern.pattern == "moving_rainbow" {
@@ -105,11 +106,13 @@ fn main() {
         };
         let ret_val = Some(json!(p_manager.get_patterns()).to_string());
         drop(p_manager);
+        println!("Manager to add pattern unlocked");
         return ret_val;
     });
 
     let clear_patterns_manager = Arc::clone(&arc_manager);
     client.on("clear_patterns".to_string(), move |_: Blank| {
+        println!("Manage locked to clear patterns");
         clear_patterns_manager.lock().unwrap().clear();
         Some("Cleared".to_string())
     });
